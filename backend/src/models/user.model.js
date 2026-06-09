@@ -28,6 +28,12 @@ const userSchema = new mongoose.Schema(
         monthlyLimit: {
             type: Number,
             default: 100
+        },
+
+        role: {
+            type: String,
+            enum: ['user', 'admin'],
+            default: 'user'
         }
 
     }, { timestamps: true },

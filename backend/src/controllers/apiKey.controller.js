@@ -1,4 +1,5 @@
 const apiKeyService = require('../services/apiKey.service');
+const auditService = require('../services/audit.service');
 const asyncHandler = require('../utils/asyncHandler');
 
 class ApiKeyController {
@@ -14,6 +15,11 @@ class ApiKeyController {
             success: true,
             apiKey
         });
+
+        await auditService.logs(
+            req.user.userId,
+            'CREATE_API_KEY'
+        );
     });
 
     getkeys = asyncHandler(async (req, res) => {
@@ -36,6 +42,11 @@ class ApiKeyController {
             success: true,
             key
         });
+
+        await auditService.logs(
+            req.user.userId,
+            'UPDATE_ACTIVE_API_KEY'
+        );
     });
 
     revokeKey = asyncHandler(async (req, res) => {
@@ -48,6 +59,11 @@ class ApiKeyController {
             success: true,
             key
         });
+
+        await auditService.logs(
+            req.user.userId,
+            'UPDATE_REVOKE_API_KEY'
+        );
     });
 }
 

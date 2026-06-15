@@ -1,5 +1,6 @@
 const authService = require('../services/auth.service');
-const asyncHandler = require('../utils/asyncHandler')
+const asyncHandler = require('../utils/asyncHandler');
+const auditService = require('../services/audit.service');
 
 class AuthController {
 
@@ -27,6 +28,11 @@ class AuthController {
             message: 'Login successful',
             result
         });
+
+        await auditService.logs(
+            result.user._id,
+            'LOGIN'
+        )
     });
 
     profile = asyncHandler(async (req, res) => {

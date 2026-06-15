@@ -1,3 +1,4 @@
+const auditService = require('../services/audit.service');
 const reportService = require('../services/report.service');
 const asyncHandler = require('../utils/asyncHandler');
 
@@ -7,6 +8,10 @@ class ReportController {
         const result = await 
             reportService.generateReport(req.user.userId);
         res.json(result);
+        await auditService.logs(
+            req.user.userId,
+            'GENERATE_REPORT'
+        );
     });
 }
 

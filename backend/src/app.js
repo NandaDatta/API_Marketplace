@@ -7,6 +7,7 @@ const apiKeyRoutes = require('./routes/apiKey.routes');
 const chatAppRoutes = require('./routes/chatapp.routes');
 const usageRoutes = require('./routes/usage.routes');
 const reportRoutes = require('./routes/report.route');
+const adminRoutes = require('./routes/admin.routes');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./config/swagger');
@@ -31,6 +32,9 @@ app.use('/api/chatapp', chatAppRoutes);
 app.use('/api/usage', usageRoutes);
 
 app.use('/api/reports', reportRoutes);
+
+app.use('/api/admin', adminRoutes);
+
 
 app.get('/api/health', (req, res) => {
     res.json({

@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const userRepository = require('../repositories/user.repository');
 const { generateToken } = require('../utils/jwt');
 
@@ -33,7 +33,7 @@ class AuthService {
 
         return {
             user,
-            token: generateToken(user._id)
+            token: generateToken(user._id, user.role)
         };
     }
 
@@ -66,7 +66,7 @@ class AuthService {
 
         return {
             user,
-            token: generateToken(user._id)
+            token: generateToken(user._id, user.role)
         }
     }
 

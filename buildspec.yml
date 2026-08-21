@@ -5,19 +5,24 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 238027390572.dkr.ecr.ap-south-1.amazonaws.com
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+      
   build:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t api-marketplace-backend .
-      - docker tag api-marketplace-backend:latest 238027390572.dkr.ecr.ap-south-1.amazonaws.com/api-marketplace-backend:latest
+      - docker build -t api-marketplace-ec2:$IMAGE_TAG .
+      - docker tag api-marketplace-ec2:$IMAGE_TAG 238027390572.dkr.ecr.ap-south-1.amazonaws.com/api-marketplace-ec2:$IMAGE_TAG
+      
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push 238027390572.dkr.ecr.ap-south-1.amazonaws.com/api-marketplace-backend:latest
-      - echo Writing image definitions file...
-      - printf '[{"name":"app","imageUri":"%s"}]' 238027390572.dkr.ecr.ap-south-1.amazonaws.com/api-marketplace-backend:latest > imagedefinitions.json
+      - docker push 238027390572.dkr.ecr.ap-south-1.amazonaws.com/api-marketplace-ec2:$IMAGE_TAG
+      - echo Writing image definitions file for CodeDeploy...
+      - printf '{"ImageURI":"238027390572.dkr.ecr.ap-south-1.amazonaws.com/api-marketplace-ec2:%s"}' $IMAGE_TAG > imageDetail.json
+
 artifacts:
   files:
-    - imagedefinitions.json
+    - imageDetail.json    # Changed from imagedefinitions.json
